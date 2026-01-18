@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry + Slytherin Fest - Bingo Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Cinzel:wght@400;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --slytherin-dark: #0d1b1e;
+            --slytherin-green: #1a4d2e;
+            --slytherin-emerald: #2d5f3f;
+            --slytherin-bright: #4ecca3;
+            --slytherin-silver: #c0c0c0;
+            --slytherin-light-silver: #e8e8e8;
+            --slytherin-accent: #3aafa9;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--slytherin-dark) 0%, #0a1612 50%, var(--slytherin-green) 100%);
+            color: var(--slytherin-light-silver);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(45, 95, 63, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(58, 175, 169, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: rgba(13, 27, 30, 0.6);
+            border: 2px solid var(--slytherin-emerald);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 rgba(78, 204, 163, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .lang-btn {
+            padding: 8px 15px;
+            background: rgba(26, 77, 46, 0.6);
+            border: 2px solid var(--slytherin-emerald);
+            border-radius: 6px;
+            color: var(--slytherin-silver);
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            border-color: var(--slytherin-bright);
+            background: rgba(45, 95, 63, 0.6);
+        }
+        
+        .lang-btn.active {
+            background: var(--slytherin-emerald);
+            border-color: var(--slytherin-bright);
+            color: var(--slytherin-bright);
+            font-weight: 600;
+        }
+        
+        header::before {
+            content: '🍏';
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            z-index: 0;
+        }
+        
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3em;
+            color: var(--slytherin-bright);
+            text-shadow: 0 0 20px rgba(78, 204, 163, 0.4),
+                         0 4px 10px rgba(0, 0, 0, 0.8);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .apple-icon {
+            display: inline-block;
+            font-size: 1.2em;
+            margin: 0 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2em;
+            color: var(--slytherin-silver);
+            font-style: italic;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .form-section {
+            background: rgba(26, 77, 46, 0.3);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--slytherin-emerald);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            border-color: var(--slytherin-bright);
+            box-shadow: 0 8px 32px rgba(78, 204, 163, 0.2);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            color: var(--slytherin-bright);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+        
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 15px;
+            background: rgba(13, 27, 30, 0.8);
+            border: 2px solid var(--slytherin-emerald);
+            border-radius: 8px;
+            color: var(--slytherin-light-silver);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: var(--slytherin-bright);
+            box-shadow: 0 0 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .bingo-size-selector {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .size-option {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .size-option input[type="radio"] {
+            display: none;
+        }
+        
+        .size-option label {
+            display: block;
+            padding: 20px;
+            background: rgba(13, 27, 30, 0.6);
+            border: 2px solid var(--slytherin-emerald);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: none;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .size-option input[type="radio"]:checked + label {
+            background: var(--slytherin-emerald);
+            border-color: var(--slytherin-bright);
+            box-shadow: 0 0 20px rgba(78, 204, 163, 0.4);
+            transform: scale(1.05);
+        }
+        
+        .size-option label:hover {
+            border-color: var(--slytherin-accent);
+            transform: translateY(-2px);
+        }
+        
+        .category-section {
+            margin-top: 20px;
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(13, 27, 30, 0.8);
+            border: 2px solid var(--slytherin-emerald);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+        
+        .category-header:hover {
+            background: rgba(26, 77, 46, 0.5);
+            border-color: var(--slytherin-bright);
+        }
+        
+        .category-header.active {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-color: var(--slytherin-bright);
+            background: var(--slytherin-emerald);
+        }
+        
+        .category-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            color: var(--slytherin-bright);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-count {
+            font-size: 0.9em;
+            color: var(--slytherin-silver);
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .expand-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        
+        .category-header.active .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: rgba(13, 27, 30, 0.6);
+            border: 2px solid var(--slytherin-emerald);
+            border-top: none;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        .category-content.active {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .category-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .category-content::-webkit-scrollbar-track {
+            background: rgba(13, 27, 30, 0.5);
+            border-radius: 4px;
+        }
+        
+        .category-content::-webkit-scrollbar-thumb {
+            background: var(--slytherin-emerald);
+            border-radius: 4px;
+        }
+        
+        .category-content::-webkit-scrollbar-thumb:hover {
+            background: var(--slytherin-bright);
+        }
+        
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .prompt-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .prompt-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--slytherin-bright);
+        }
+        
+        .prompt-item label {
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            text-transform: none;
+            font-size: 0.95em;
+            letter-spacing: 0;
+            margin: 0;
+            color: var(--slytherin-light-silver);
+            transition: color 0.2s ease;
+        }
+        
+        .prompt-item:hover label {
+            color: var(--slytherin-bright);
+        }
+        
+        .center-option {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(45, 95, 63, 0.2);
+            border-radius: 8px;
+            border: 1px solid var(--slytherin-emerald);
+        }
+        
+        .center-option label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-transform: none;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .center-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--slytherin-bright);
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--slytherin-dark);
+            background: linear-gradient(135deg, var(--slytherin-bright) 0%, var(--slytherin-accent) 100%);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 8px 25px rgba(78, 204, 163, 0.3);
+            margin-top: 30px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(78, 204, 163, 0.5);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .generate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #bingoResult {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        #bingoCanvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7),
+                        0 0 30px rgba(78, 204, 163, 0.3);
+            margin-bottom: 20px;
+            border: 3px solid var(--slytherin-bright);
+        }
+        
+        .download-btn {
+            padding: 15px 40px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            color: var(--slytherin-dark);
+            background: var(--slytherin-silver);
+            border: 2px solid var(--slytherin-bright);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .download-btn:hover {
+            background: var(--slytherin-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(78, 204, 163, 0.4);
+        }
+        
+        .error-message {
+            background: rgba(220, 53, 69, 0.2);
+            border: 2px solid #dc3545;
+            color: #ff6b7a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .prompts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="setLanguage('es')">ES</button>
+                <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+            </div>
+            <h1>
+                <span class="apple-icon">🍏</span>
+                <span data-i18n="title">Harry + Slytherin</span>
+                <span class="apple-icon">🍏</span>
+            </h1>
+            <p class="subtitle" data-i18n="subtitle">Generador de Bingo para Fest</p>
+        </header>
+        
+        <div class="form-section">
+            <div class="form-group">
+                <label for="username" data-i18n="username-label">Nombre de Usuario</label>
+                <input type="text" id="username" data-i18n-placeholder="username-placeholder" placeholder="Tu nombre o username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" data-i18n="email-label">Correo Electrónico</label>
+                <input type="email" id="email" placeholder="tu@email.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="discord" data-i18n="discord-label">Usuario de Discord (opcional)</label>
+                <input type="text" id="discord" data-i18n-placeholder="discord-placeholder" placeholder="usuario#1234">
+            </div>
+            
+            <div class="form-group">
+                <label for="accessCode" data-i18n="code-label">Código de Acceso</label>
+                <input type="text" id="accessCode" data-i18n-placeholder="code-placeholder" placeholder="HSF-XXXXXX" required style="text-transform: uppercase;">
+                <small style="color: var(--slytherin-silver); font-size: 0.9em; display: block; margin-top: 8px;" data-i18n="code-help">
+                    Debes haber recibido 4 códigos por email después de registrarte en el formulario del fest.
+                </small>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="form-group">
+                <label data-i18n="size-label">Tamaño de la Tabla de Bingo</label>
+                <div class="bingo-size-selector">
+                    <div class="size-option">
+                        <input type="radio" id="size6" name="bingoSize" value="6">
+                        <label for="size6">
+                            <div style="font-size: 2em; margin-bottom: 10px;">📐</div>
+                            <div style="font-weight: 600;">2x3</div>
+                            <div style="font-size: 0.9em; opacity: 0.8;" data-i18n="size6-desc">6 casillas</div>
+                        </label>
+                    </div>
+                    <div class="size-option">
+                        <input type="radio" id="size9" name="bingoSize" value="9" checked>
+                        <label for="size9">
+                            <div style="font-size: 2em; margin-bottom: 10px;">⬛</div>
+                            <div style="font-weight: 600;">3x3</div>
+                            <div style="font-size: 0.9em; opacity: 0.8;" data-i18n="size9-desc">9 casillas</div>
+                        </label>
+                    </div>
+                    <div class="size-option">
+                        <input type="radio" id="size16" name="bingoSize" value="16">
+                        <label for="size16">
+                            <div style="font-size: 2em; margin-bottom: 10px;">🔲</div>
+                            <div style="font-weight: 600;">4x4</div>
+                            <div style="font-size: 0.9em; opacity: 0.8;" data-i18n="size16-desc">16 casillas</div>
+                        </label>
+                    </div>
+                    <div class="size-option">
+                        <input type="radio" id="size25" name="bingoSize" value="25">
+                        <label for="size25">
+                            <div style="font-size: 2em; margin-bottom: 10px;">⬜</div>
+                            <div style="font-weight: 600;">5x5</div>
+                            <div style="font-size: 0.9em; opacity: 0.8;" data-i18n="size25-desc">25 casillas</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="center-option" id="centerOption" style="display: block;">
+                <label>
+                    <input type="checkbox" id="centerFree" checked>
+                    <span data-i18n="center-option">Casilla central como "FREE" (si no está marcado, será un prompt)</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2 style="font-family: 'Cinzel', serif; color: var(--slytherin-bright); margin-bottom: 20px;" data-i18n="select-prompts">
+                Selecciona tus Prompts
+            </h2>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('pairings')">
+                    <div class="category-title">
+                        <span>💚</span>
+                        <span data-i18n="cat-pairings">Parejas Harry/Slytherin</span>
+                        <span class="category-count" id="pairings-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="pairings-content">
+                    <div class="prompts-grid" id="pairings-grid"></div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('romance')">
+                    <div class="category-title">
+                        <span>💕</span>
+                        <span data-i18n="cat-romance">Romance</span>
+                        <span class="category-count" id="romance-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="romance-content">
+                    <div class="prompts-grid" id="romance-grid"></div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('aus')">
+                    <div class="category-title">
+                        <span>🌟</span>
+                        <span data-i18n="cat-aus">Alternate Universes</span>
+                        <span class="category-count" id="aus-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="aus-content">
+                    <div class="prompts-grid" id="aus-grid"></div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('creatures')">
+                    <div class="category-title">
+                        <span>🐉</span>
+                        <span data-i18n="cat-creatures">Creatures</span>
+                        <span class="category-count" id="creatures-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="creatures-content">
+                    <div class="prompts-grid" id="creatures-grid"></div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('kinks')">
+                    <div class="category-title">
+                        <span>🔗</span>
+                        <span data-i18n="cat-kinks">Kinks</span>
+                        <span class="category-count" id="kinks-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="kinks-content">
+                    <div class="prompts-grid" id="kinks-grid"></div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('nsfw')">
+                    <div class="category-title">
+                        <span>🔥</span>
+                        <span data-i18n="cat-nsfw">NSFW</span>
+                        <span class="category-count" id="nsfw-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="nsfw-content">
+                    <div class="prompts-grid" id="nsfw-grid"></div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('deaddove')">
+                    <div class="category-title">
+                        <span>⚠️</span>
+                        <span data-i18n="cat-deaddove">Dead Dove</span>
+                        <span class="category-count" id="deaddove-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="deaddove-content">
+                    <div class="prompts-grid" id="deaddove-grid"></div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('tropes')">
+                    <div class="category-title">
+                        <span>📖</span>
+                        <span data-i18n="cat-tropes">Tropes & Scenarios</span>
+                        <span class="category-count" id="tropes-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="tropes-content">
+                    <div class="prompts-grid" id="tropes-grid"></div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('settings')">
+                    <div class="category-title">
+                        <span>🏰</span>
+                        <span data-i18n="cat-settings">Settings & Locations</span>
+                        <span class="category-count" id="settings-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="settings-content">
+                    <div class="prompts-grid" id="settings-grid"></div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('timeperiods')">
+                    <div class="category-title">
+                        <span>⏳</span>
+                        <span data-i18n="cat-timeperiods">Time Periods/Canon Divergence</span>
+                        <span class="category-count" id="timeperiods-count" data-i18n="selected-count">(0 seleccionados)</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="category-content" id="timeperiods-content">
+                    <div class="prompts-grid" id="timeperiods-grid"></div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="generate-btn" onclick="generateBingo()">
+            <span data-i18n="generate-btn">🍏 Generar Mi Bingo 🍏</span>
+        </button>
+        
+        <div id="bingoResult"></div>
+    </div>
+    
+    <script>
+        // Sistema de traducción
+        let currentLanguage = 'es';
+        
+        const translations = {
+            es: {
+                'title': 'Harry + Slytherin',
+                'subtitle': 'Generador de Bingo para Fest',
+                'username-label': 'Nombre de Usuario',
+                'username-placeholder': 'Tu nombre o username',
+                'email-label': 'Correo Electrónico',
+                'discord-label': 'Usuario de Discord (opcional)',
+                'discord-placeholder': 'usuario#1234',
+                'code-label': 'Código de Acceso',
+                'code-placeholder': 'HSF-XXXXXX',
+                'code-help': 'Debes haber recibido 4 códigos por email después de registrarte en el formulario del fest.',
+                'size-label': 'Tamaño de la Tabla de Bingo',
+                'size6-desc': '6 casillas',
+                'size9-desc': '9 casillas',
+                'size16-desc': '16 casillas',
+                'size25-desc': '25 casillas',
+                'center-option': 'Casilla central como "FREE" (si no está marcado, será un prompt)',
+                'select-prompts': 'Selecciona tus Prompts',
+                'cat-pairings': 'Parejas Harry/Slytherin',
+                'cat-romance': 'Romance',
+                'cat-aus': 'Universos Alternativos',
+                'cat-creatures': 'Criaturas',
+                'cat-kinks': 'Kinks',
+                'cat-nsfw': 'NSFW',
+                'cat-deaddove': 'Dead Dove',
+                'cat-tropes': 'Tropes & Escenarios',
+                'cat-settings': 'Lugares & Localizaciones',
+                'cat-timeperiods': 'Períodos Temporales/Divergencia Canon',
+                'selected-count': '(0 seleccionados)',
+                'generate-btn': '🍏 Generar Mi Bingo 🍏',
+                'download-btn': '📥 Descargar Mi Bingo',
+                'download-stamp': '🍏 Descargar Tampón de Manzana',
+                'error-fields': 'Por favor completa tu nombre y correo electrónico.',
+                'error-code': 'Por favor ingresa tu código de acceso.',
+                'error-code-invalid': 'Código inválido o ya utilizado. Por favor verifica tu código.',
+                'error-code-used': 'Este código ya fue utilizado. Usa uno de tus otros códigos.',
+                'error-prompts': 'Necesitas seleccionar al menos {count} prompts para generar el bingo.',
+                'validating-code': 'Validando código...',
+                'footer-text': '🐍 Ambition • Cunning • Pride 🐍'
+            },
+            en: {
+                'title': 'Harry + Slytherin',
+                'subtitle': 'Fest Bingo Generator',
+                'username-label': 'Username',
+                'username-placeholder': 'Your name or username',
+                'email-label': 'Email Address',
+                'discord-label': 'Discord Username (optional)',
+                'discord-placeholder': 'username#1234',
+                'code-label': 'Access Code',
+                'code-placeholder': 'HSF-XXXXXX',
+                'code-help': 'You should have received 4 codes by email after registering in the fest form.',
+                'size-label': 'Bingo Card Size',
+                'size6-desc': '6 squares',
+                'size9-desc': '9 squares',
+                'size16-desc': '16 squares',
+                'size25-desc': '25 squares',
+                'center-option': 'Center square as "FREE" (if unchecked, it will be a prompt)',
+                'select-prompts': 'Select Your Prompts',
+                'cat-pairings': 'Harry/Slytherin Pairings',
+                'cat-romance': 'Romance',
+                'cat-aus': 'Alternate Universes',
+                'cat-creatures': 'Creatures',
+                'cat-kinks': 'Kinks',
+                'cat-nsfw': 'NSFW',
+                'cat-deaddove': 'Dead Dove',
+                'cat-tropes': 'Tropes & Scenarios',
+                'cat-settings': 'Settings & Locations',
+                'cat-timeperiods': 'Time Periods/Canon Divergence',
+                'selected-count': '(0 selected)',
+                'generate-btn': '🍏 Generate My Bingo 🍏',
+                'download-btn': '📥 Download My Bingo',
+                'download-stamp': '🍏 Download Apple Stamp',
+                'error-fields': 'Please fill in your name and email address.',
+                'error-code': 'Please enter your access code.',
+                'error-code-invalid': 'Invalid or already used code. Please check your code.',
+                'error-code-used': 'This code has already been used. Use one of your other codes.',
+                'error-prompts': 'You need to select at least {count} prompts to generate the bingo.',
+                'validating-code': 'Validating code...',
+                'footer-text': '🐍 Ambition • Cunning • Pride 🐍'
+            }
+        };
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update all translated elements
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-i18n-placeholder');
+                if (translations[lang][key]) {
+                    element.placeholder = translations[lang][key];
+                }
+            });
+            
+            // Update counts
+            updateAllCounts();
+        }
+        
+        function updateAllCounts() {
+            for (let category in prompts) {
+                updateCount(category);
+            }
+        }
+        
+        // Datos de los prompts - EDITA AQUÍ TUS LISTAS
+        const prompts = {
+            pairings: [
+                // Estudiantes de la edad de Harry
+                "Harry/Draco", "Harry/Blaise", "Harry/Theodore Nott", "Harry/Pansy",
+                "Harry/Daphne Greengrass", "Harry/Astoria Greengrass", "Harry/Millicent Bulstrode",
+                "Harry/Tracey Davis", "Harry/Goyle", "Harry/Crabbe",
+                // Adultos Slytherin
+                "Harry/Severus", "Harry/Lucius", "Harry/Narcissa", "Harry/Tom Riddle",
+                "Harry/Voldemort", "Harry/Regulus Black", "Harry/Bellatrix",
+                "Harry/Rodolphus Lestrange", "Harry/Rabastan Lestrange",
+                // Jugadores de Quidditch Slytherin
+                "Harry/Marcus Flint", "Harry/Adrian Pucey", "Harry/Terence Higgs",
+                "Harry/Graham Montague", "Harry/Miles Bletchley",
+                // Otros Slytherins
+                "Harry/Horace Slughorn", "Harry/Barty Crouch Jr.", "Harry/Evan Rosier",
+                "Harry/Mulciber", "Harry/Avery", "Harry/Yaxley", "Harry/Dolohov",
+                "Harry/Rookwood", "Harry/Phineas Nigellus Black", "Harry/Salazar Slytherin",
+                // Rarepairs creativos
+                "Harry/Scorpius Malfoy", "Harry/Albus Potter/Scorpius (OT3)",
+                "Harry/Ominis Gaunt", "Harry/Sebastian Sallow"
+            ],
+            
+            romance: [
+                "First Kiss", "Fake Dating", "Friends to Lovers", "Enemies to Lovers",
+                "Rivals to Lovers", "One Bed", "Slow Burn", "Love at First Sight",
+                "Forbidden Love", "Second Chance Romance", "Pining",
+                "Unrequited Love (that becomes requited)", "Secret Admirer",
+                "Love Confession", "Courting Rituals", "First Date",
+                "Protective Behavior", "Jealous Partner", "Cuddling/Snuggling",
+                "Hand Holding", "Love Letters", "Romantic Gesture",
+                "Dancing Together", "Stargazing", "Sharing a Meal"
+            ],
+            
+            aus: [
+                "Omegaverse", "Soulmates", "Muggle AU", "Coffee Shop AU",
+                "College/University AU", "Royalty AU", "Mafia AU", "Pirates AU",
+                "Historical AU", "Modern AU", "Hogwarts Professors AU",
+                "Auror Partners AU", "Healer/Patient AU", "Celebrity AU",
+                "Bookshop AU", "Arranged Marriage AU", "Dystopian AU",
+                "Magical Creatures Shop AU", "Rival Business Owners AU",
+                "Spy AU", "Sports AU", "Band/Musicians AU", "Tattoo Artist AU",
+                "Florist AU", "Canon Divergence - Slytherin Harry"
+            ],
+            
+            creatures: [
+                "Vampire", "Veela", "Werewolf", "Dragon", "Naga/Snake Creature",
+                "Incubus/Succubus", "Fae/Fairy", "Merman/Siren", "Phoenix",
+                "Basilisk Hybrid", "Dementor Hybrid", "Demon", "Angel", "Centaur",
+                "Animagus Form", "Parseltongue Magic", "Shadow Creature",
+                "Elemental Being", "Grindylow", "Thestral Connection",
+                "Creature Inheritance", "Magical Familiar Bond", "Hybrid Creature",
+                "Unicorn Blood Magic", "Acromantula Hybrid"
+            ],
+            
+            kinks: [
+                "69", "Aftercare", "Against the wall", "Anal sex", "Begging",
+                "BDSM", "Biting", "Blow jobs", "Body worship", "Clothed sex",
+                "Comfort sex", "Coming in pants", "Coming untouched",
+                "Cunnilingus", "Deepthroating", "Dildo", "Dirty talk",
+                "Doggy style", "Dom/sub", "Double penetration", "Dry humping",
+                "Edging", "Exhibitionism", "Face sitting", "Fingering",
+                "Fingers in mouth", "First time", "First time bottoming",
+                "First time topping", "Frottage", "Hand jobs", "Handcuffs",
+                "Hickeys", "Kink discovery", "Kneeling", "Knotting",
+                "Making out", "Masturbation", "Missionary position",
+                "Morning sex", "Multiple orgasms", "Mutual masturbation",
+                "Nipple play", "Oral fixation", "Orgasm denial", "Overstimulation",
+                "Pegging", "Phone sex", "Power bottom", "Praise kink",
+                "Public sex", "Rimming", "Roleplay", "Rough sex",
+                "Sensation play", "Service kink", "Sex toys", "Spanking",
+                "Tender sex", "Thigh riding", "Threesome", "Vibrators",
+                "Voice kink", "Voyeurism"
+            ],
+            
+            nsfw: [
+                "Sex in front of the fireplace", "First heat under a full moon",
+                "Blowjob", "Loss of virginity", "Rough sex", "Morning sex",
+                "Shower/Bath sex", "Desk sex", "Against the wall",
+                "Oral fixation", "Rimming", "Fingering", "Public sex",
+                "Semi-public sex", "Cock warming", "Multiple orgasms",
+                "Overstimulation", "Edging/Orgasm denial", "Sex toys",
+                "Dirty talk", "Praise kink", "Begging", "Breeding (consensual)",
+                "Marking/Claiming", "First time together"
+            ],
+            
+            deaddove: [
+                "Non-con/Dub-con", "Sex Slave", "Non-con Body Modification",
+                "Dark Rituals", "Kidnapping/Captivity", "Mind Control/Imperius",
+                "Breeding Kink (non-con)", "Torture", "Stockholm Syndrome",
+                "Dark Magic Bonding", "Forced Transformation", "Blood Magic",
+                "Sacrificial Magic", "Dark Possessiveness", "Obsession/Yandere",
+                "Gaslighting", "Manipulation", "Power Imbalance (extreme)",
+                "Dehumanization", "Forced Proximity (dark version)",
+                "Predator/Prey (non-con)", "Revenge Sex", "Humiliation (extreme)",
+                "Ownership/Property", "Dark Claiming Marks"
+            ],
+            
+            tropes: [
+                "Arranged Marriage", "Forced Marriage", "War Prize",
+                "Political Alliance", "Marriage Law", "Jealousy/Possessiveness",
+                "Secret Relationship", "Teacher/Student Dynamic",
+                "Arranged Courtship", "Potions Accident", "Truth or Dare",
+                "Caught in the Act", "Detention Gone Wrong", "Forced Proximity",
+                "Forced to Work Together", "Locked in a Room",
+                "Handcuffed Together", "Undercover Mission Together",
+                "Partnered for Class Project", "Sharing Living Space",
+                "Veritaserum Confession", "Amortentia Reveals Feelings",
+                "Mistaken Identity", "Pretend Relationship", "Accidental Bonding"
+            ],
+            
+            settings: [
+                "Forbidden Forest Encounter", "Room of Requirement",
+                "Slytherin Common Room", "Astronomy Tower", "Prefect's Bathroom",
+                "Malfoy Manor", "During Quidditch Match", "Library After Hours",
+                "Potions Classroom", "Hogwarts Express", "Hogsmeade Weekend",
+                "Three Broomsticks", "Shrieking Shack", "Black Lake",
+                "Quidditch Locker Room", "Dungeons", "Great Hall", "Owlery",
+                "Greenhouse", "Abandoned Classroom", "Grimmauld Place",
+                "Ministry of Magic", "Diagon Alley", "Knockturn Alley",
+                "Riddle Manor"
+            ],
+            
+            timeperiods: [
+                "During Hogwarts Years (Golden Trio Era)", "Post-War",
+                "Time Travel", "Marauders Era", "Next Generation",
+                "First Wizarding War", "Between Wars (1981-1991)",
+                "Eighth Year at Hogwarts", "Founders Era", "Grindelwald Era",
+                "Future AU", "Canon Rewrite - Voldemort Wins",
+                "Canon Rewrite - No War", "Canon Rewrite - Different Houses",
+                "Pre-Hogwarts Childhood", "Summer Between Years",
+                "Triwizard Tournament Era", "During Horcrux Hunt", "Azkaban AU",
+                "Death Eater Meetings", "Order of the Phoenix Era",
+                "Ministry Era (Harry as Auror)", "Hogwarts Founders' Time",
+                "Victorian Wizarding Era", "Ancient Magic Times"
+            ]
+        };
+        
+        // Inicializar el formulario
+        document.addEventListener('DOMContentLoaded', function() {
+            // Poblar las grillas de prompts
+            for (let category in prompts) {
+                const grid = document.getElementById(`${category}-grid`);
+                prompts[category].forEach((prompt, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'prompt-item';
+                    div.innerHTML = `
+                        <input type="checkbox" id="${category}-${index}" 
+                               onchange="updateCount('${category}')">
+                        <label for="${category}-${index}">${prompt}</label>
+                    `;
+                    grid.appendChild(div);
+                });
+            }
+            
+            // Mostrar/ocultar opción de casilla central según tamaño
+            document.querySelectorAll('input[name="bingoSize"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const centerOption = document.getElementById('centerOption');
+                    const size = parseInt(this.value);
+                    // Mostrar opción FREE solo para tamaños con casilla central impar (9, 25)
+                    if (size === 9 || size === 25) {
+                        centerOption.style.display = 'block';
+                    } else {
+                        centerOption.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        function toggleCategory(category) {
+            const header = document.querySelector(`#${category}-content`).previousElementSibling;
+            const content = document.getElementById(`${category}-content`);
+            
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+        
+        function updateCount(category) {
+            const checkboxes = document.querySelectorAll(`#${category}-grid input[type="checkbox"]:checked`);
+            const count = checkboxes.length;
+            const countText = currentLanguage === 'es' ? `(${count} seleccionados)` : `(${count} selected)`;
+            document.getElementById(`${category}-count`).textContent = countText;
+        }
+        
+        // URL del Google Apps Script (DEBES REEMPLAZAR ESTO CON TU URL)
+        const SCRIPT_URL = 'TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI';
+        
+        async function validateCode(code) {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=validate&code=${encodeURIComponent(code)}`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error validating code:', error);
+                return { success: false, message: 'Error connecting to server' };
+            }
+        }
+        
+        async function markCodeAsUsed(code, username, email) {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=use&code=${encodeURIComponent(code)}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error marking code as used:', error);
+                return { success: false };
+            }
+        }
+        
+        async function generateBingo() {
+            // Validar campos
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const discord = document.getElementById('discord').value.trim();
+            const accessCode = document.getElementById('accessCode').value.trim().toUpperCase();
+            
+            if (!username || !email) {
+                showError(translations[currentLanguage]['error-fields']);
+                return;
+            }
+            
+            if (!accessCode) {
+                showError(translations[currentLanguage]['error-code']);
+                return;
+            }
+            
+            // Mostrar mensaje de validación
+            showError(translations[currentLanguage]['validating-code']);
+            
+            // Validar código con Google Apps Script
+            const validation = await validateCode(accessCode);
+            
+            if (!validation.success) {
+                if (validation.message === 'already_used') {
+                    showError(translations[currentLanguage]['error-code-used']);
+                } else {
+                    showError(translations[currentLanguage]['error-code-invalid']);
+                }
+                return;
+            }
+            
+            // Obtener tamaño del bingo
+            const size = parseInt(document.querySelector('input[name="bingoSize"]:checked').value);
+            const hasCenterSquare = (size === 9 || size === 25);
+            const centerFree = document.getElementById('centerFree').checked && hasCenterSquare;
+            
+            // Obtener prompts seleccionados
+            let selectedPrompts = [];
+            for (let category in prompts) {
+                const checkboxes = document.querySelectorAll(`#${category}-grid input[type="checkbox"]:checked`);
+                checkboxes.forEach(cb => {
+                    const index = parseInt(cb.id.split('-')[1]);
+                    selectedPrompts.push(prompts[category][index]);
+                });
+            }
+            
+            // Calcular cuántos prompts necesitamos
+            const neededPrompts = centerFree ? size - 1 : size;
+            
+            // Mostrar advertencia si faltan prompts
+            if (selectedPrompts.length < neededPrompts) {
+                const errorMsg = translations[currentLanguage]['error-prompts'].replace('{count}', neededPrompts);
+                const remaining = neededPrompts - selectedPrompts.length;
+                const warningMsg = currentLanguage === 'es' 
+                    ? `${errorMsg}<br><br>📊 Has seleccionado: <strong>${selectedPrompts.length}</strong> prompts<br>⚠️ Te faltan: <strong>${remaining}</strong> prompts`
+                    : `${errorMsg}<br><br>📊 You have selected: <strong>${selectedPrompts.length}</strong> prompts<br>⚠️ You need: <strong>${remaining}</strong> more prompts`;
+                showError(warningMsg);
+                return;
+            }
+            
+            // Mezclar y seleccionar prompts
+            const shuffled = selectedPrompts.sort(() => Math.random() - 0.5);
+            const bingoPrompts = shuffled.slice(0, neededPrompts);
+            
+            // Si la casilla central es FREE, insertar en el medio
+            if (centerFree) {
+                const centerIndex = Math.floor(size / 2);
+                bingoPrompts.splice(centerIndex, 0, 'FREE');
+            }
+            
+            // Marcar código como usado
+            await markCodeAsUsed(accessCode, username, email);
+            
+            // Generar la imagen del bingo
+            drawBingo(username, discord, bingoPrompts, size);
+        }
+        
+        function drawBingo(username, discord, prompts, size) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Configuración del canvas según tamaño
+            let rows, cols, cellSize;
+            
+            if (size === 6) {
+                rows = 2; cols = 3; cellSize = 200;
+            } else if (size === 9) {
+                rows = 3; cols = 3; cellSize = 200;
+            } else if (size === 16) {
+                rows = 4; cols = 4; cellSize = 180;
+            } else if (size === 25) {
+                rows = 5; cols = 5; cellSize = 160;
+            }
+            
+            const padding = 20;
+            const headerHeight = discord ? 150 : 120;
+            const footerHeight = 60;
+            
+            canvas.width = (cols * cellSize) + (padding * 2);
+            canvas.height = (rows * cellSize) + (padding * 2) + headerHeight + footerHeight;
+            
+            // Fondo con gradiente
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#0d1b1e');
+            gradient.addColorStop(0.5, '#0a1612');
+            gradient.addColorStop(1, '#1a4d2e');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Textura de fondo sutil
+            ctx.fillStyle = 'rgba(45, 95, 63, 0.05)';
+            for (let i = 0; i < 100; i++) {
+                ctx.beginPath();
+                ctx.arc(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height,
+                    Math.random() * 3,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+            }
+            
+            // Header
+            ctx.fillStyle = '#4ecca3';
+            ctx.font = 'bold 36px "Cinzel", serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Harry + Slytherin Fest', canvas.width / 2, 50);
+            
+            // Manzanas decorativas
+            ctx.font = '40px Arial';
+            ctx.fillText('🍏', 80, 50);
+            ctx.fillText('🍏', canvas.width - 80, 50);
+            
+            // Username
+            ctx.fillStyle = '#c0c0c0';
+            ctx.font = 'italic 24px "Cormorant Garamond", serif';
+            ctx.fillText(username, canvas.width / 2, 90);
+            
+            // Discord (si existe)
+            if (discord) {
+                ctx.fillStyle = '#3aafa9';
+                ctx.font = 'italic 20px "Cormorant Garamond", serif';
+                ctx.fillText(`Discord: ${discord}`, canvas.width / 2, 120);
+            }
+            
+            // Dibujar las celdas del bingo
+            let promptIndex = 0;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = padding + (col * cellSize);
+                    const y = headerHeight + padding + (row * cellSize);
+                    
+                    // Fondo de celda
+                    ctx.fillStyle = 'rgba(26, 77, 46, 0.6)';
+                    ctx.fillRect(x, y, cellSize, cellSize);
+                    
+                    // Borde de celda
+                    ctx.strokeStyle = '#2d5f3f';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(x, y, cellSize, cellSize);
+                    
+                    // Borde interior brillante
+                    ctx.strokeStyle = 'rgba(78, 204, 163, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x + 2, y + 2, cellSize - 4, cellSize - 4);
+                    
+                    // Texto del prompt
+                    const prompt = prompts[promptIndex];
+                    ctx.fillStyle = prompt === 'FREE' ? '#4ecca3' : '#e8e8e8';
+                    
+                    // Calcular tamaño de fuente dinámico basado en longitud del texto y tamaño de celda
+                    let fontSize = 18;
+                    if (size === 25) fontSize = 14; // 5x5 más pequeño
+                    else if (size === 16) fontSize = 16; // 4x4 intermedio
+                    
+                    if (prompt !== 'FREE') {
+                        if (prompt.length > 50) fontSize = Math.max(12, fontSize - 2);
+                        else if (prompt.length > 30) fontSize = Math.max(14, fontSize - 1);
+                    }
+                    
+                    ctx.font = prompt === 'FREE' ? 'bold 36px "Cinzel", serif' : `${fontSize}px "Outfit", sans-serif`;
+                    ctx.textAlign = 'center';
+                    
+                    // Dividir texto en líneas si es muy largo
+                    const maxWidth = cellSize - 30;
+                    const words = prompt.split(' ');
+                    let lines = [];
+                    let currentLine = words[0];
+                    
+                    for (let i = 1; i < words.length; i++) {
+                        const testLine = currentLine + ' ' + words[i];
+                        const metrics = ctx.measureText(testLine);
+                        if (metrics.width > maxWidth) {
+                            lines.push(currentLine);
+                            currentLine = words[i];
+                        } else {
+                            currentLine = testLine;
+                        }
+                    }
+                    lines.push(currentLine);
+                    
+                    // Si hay demasiadas líneas, reducir más el tamaño de fuente
+                    if (lines.length > 5 && prompt !== 'FREE') {
+                        fontSize = Math.max(11, fontSize - 2);
+                        ctx.font = `${fontSize}px "Outfit", sans-serif`;
+                        // Recalcular líneas con nuevo tamaño
+                        lines = [];
+                        currentLine = words[0];
+                        for (let i = 1; i < words.length; i++) {
+                            const testLine = currentLine + ' ' + words[i];
+                            const metrics = ctx.measureText(testLine);
+                            if (metrics.width > maxWidth) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        lines.push(currentLine);
+                    }
+                    
+                    // Centrar verticalmente el texto
+                    const lineHeight = prompt === 'FREE' ? 40 : fontSize * 1.3;
+                    const totalHeight = lines.length * lineHeight;
+                    const startY = y + (cellSize / 2) - (totalHeight / 2) + (lineHeight / 2);
+                    
+                    lines.forEach((line, i) => {
+                        ctx.fillText(line, x + cellSize / 2, startY + (i * lineHeight));
+                    });
+                    
+                    promptIndex++;
+                }
+            }
+            
+            // Footer
+            const footerY = canvas.height - 35;
+            ctx.fillStyle = '#3aafa9';
+            ctx.font = 'italic 18px "Cormorant Garamond", serif';
+            ctx.fillText(translations[currentLanguage]['footer-text'], canvas.width / 2, footerY);
+            
+            // Mostrar resultado
+            const resultDiv = document.getElementById('bingoResult');
+            resultDiv.innerHTML = `
+                <canvas id="bingoCanvas"></canvas>
+                <br>
+                <button class="download-btn" onclick="downloadBingo()">
+                    ${translations[currentLanguage]['download-btn']}
+                </button>
+                <button class="download-btn" onclick="downloadAppleStamp()" style="margin-left: 10px;">
+                    ${translations[currentLanguage]['download-stamp']}
+                </button>
+            `;
+            
+            const displayCanvas = document.getElementById('bingoCanvas');
+            displayCanvas.width = canvas.width;
+            displayCanvas.height = canvas.height;
+            const displayCtx = displayCanvas.getContext('2d');
+            displayCtx.drawImage(canvas, 0, 0);
+            
+            // Guardar el canvas para descarga
+            window.bingoCanvas = canvas;
+            
+            // Scroll suave al resultado
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function downloadBingo() {
+            const canvas = window.bingoCanvas;
+            const link = document.createElement('a');
+            const username = document.getElementById('username').value.trim();
+            link.download = `Harry-Slytherin-Bingo-${username}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        function downloadAppleStamp() {
+            // Crear canvas para el tampón de manzana
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Tamaño del tampón (más grande para mejor calidad)
+            const size = 300;
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Fondo transparente (ya está por defecto)
+            
+            // Dibujar círculo verde semi-transparente como base
+            ctx.fillStyle = 'rgba(45, 95, 63, 0.9)';
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2 - 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Borde brillante
+            ctx.strokeStyle = '#4ecca3';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2 - 10, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Manzana emoji grande en el centro
+            ctx.font = 'bold 160px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🍏', size / 2, size / 2);
+            
+            // Texto "COMPLETED" o "COMPLETADO" alrededor
+            ctx.save();
+            ctx.translate(size / 2, size / 2);
+            
+            const text = currentLanguage === 'es' ? 'COMPLETADO' : 'COMPLETED';
+            ctx.font = 'bold 24px "Cinzel", serif';
+            ctx.fillStyle = '#4ecca3';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Texto en la parte superior
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText(text, 0, -100);
+            
+            ctx.restore();
+            
+            // Descargar
+            const link = document.createElement('a');
+            link.download = 'Harry-Slytherin-Apple-Stamp.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        function showError(message) {
+            const resultDiv = document.getElementById('bingoResult');
+            resultDiv.innerHTML = `
+                <div class="error-message">
+                    ⚠️ ${message}
+                </div>
+            `;
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>
